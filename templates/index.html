@@ -17,20 +17,39 @@
 
 <body>
     <header class="header">
-        <div>
-            <h1>Enter a headline example! :D</h1>
-        </div>
+        <h1>Clickbait Detector</h1>
         <div class="content-submit">
-            <textarea class="headline" placeholder="Type something..."></textarea>
-            <div class="buttons">
-                <button class="btn-language"><img src="/static/images/EN.svg" alt="english"></button>
-                <button class="btn-language"><img src="/static/images/RO.svg" alt="romanian"></button>
-                <button class="btn-language"><img src="/static/images/HU.svg" alt="hungarian"></button>
+            <div class="content-stanga">
+                <h2>Enter a headline example! :D</h2>
+                <div class="buttons">
+                    <button type="button" class="btn-language"><img src="images/EN.svg" alt="english"></button>
+                    <button type="button" class="btn-language"><img src="images/RO.svg" alt="romanian"></button>
+                    <button type="button" class="btn-language"><img src="images/HU.svg" alt="hungarian"></button>
+                </div>
+                <div class="textarea-and-button">
+                    <textarea class="headline" placeholder="Type something..." maxlength="200"></textarea>
+                    <div class="paste-delete">
+                        <img id="pasteBtn" src="images/paste.svg" alt="Paste">
+                        <img id="deleteBtn" src="images/delete.svg" alt="Delete">
+                    </div>
+                    <div class="submit-and-char-count">
+                        <div class="char-count">0 / 200</div>
+                        <button type="submit" class="btn-submit">Detect</button>
+                    </div>
+                </div>
+                <p id="result">Your headline is likely:</p>
+            </div>
+            <div class="content-dreapta">
+                <canvas id="confidenceChart" width="300" height="200"></canvas>
+                <div class="warning">
+                    <img id="icon-warning" src="images/Warning.svg" alt="Warning">
+                    <p id="languageWarning" class="language-warning"></p>
+                </div>
             </div>
         </div>
-        <p id="result">Your headline is likely:</p>
     </header>
-
 </body>
-<script src="/static/js/index.js"></script>
+
+<script src="index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </html>
