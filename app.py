@@ -7,33 +7,22 @@ import os
 import tensorflow as tf
 import numpy as np
 from langdetect import detect, DetectorFactory
+from flask import render_template
 DetectorFactory.seed = 0
 
 app = Flask(__name__)
 CORS(app)
 
-en_tokenizer = DistilBertTokenizer.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/EN/en_distilbert_tokenizer"
-)
-en_model = TFDistilBertForSequenceClassification.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/EN/en_distilbert_clickbait_model"
-)
-ro_tokenizer = BertTokenizer.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/RO/ro_bert_tokenizer"  
-)
-ro_model = TFBertForSequenceClassification.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/RO/ro_bert_clickbait_model" 
-)
-hu_tokenizer = BertTokenizer.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/HU/hu_bert_tokenizer"  
-)
-hu_model = TFBertForSequenceClassification.from_pretrained(
-    "C:/Users/Lenovo/Desktop/Disertatie/Saved models/HU/hu_bert_clickbait_model"  
-)
+en_tokenizer = DistilBertTokenizer.from_pretrained("models/EN/en_distilbert_tokenizer")
+en_model = TFDistilBertForSequenceClassification.from_pretrained("models/EN/en_distilbert_clickbait_model")
+ro_tokenizer = BertTokenizer.from_pretrained("models/RO/ro_bert_tokenizer"  )
+ro_model = TFBertForSequenceClassification.from_pretrained("models/RO/ro_bert_clickbait_model" )
+hu_tokenizer = BertTokenizer.from_pretrained("models/HU/hu_bert_tokenizer"  )
+hu_model = TFBertForSequenceClassification.from_pretrained("models/HU/hu_bert_clickbait_model"  )
 
 @app.route('/')
-def serve_index() -> str:
-    return send_from_directory('.', 'index.html')
+def serve_index():
+    return render_template('index.html')
 
 @app.route('/<path:path>')
 def serve_static(path: str) -> tuple[str, int]:
@@ -97,4 +86,4 @@ def detect_language():
         return jsonify({"error": "Could not detect language", "details": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=False, host='0.0.0.0', port=8080)
