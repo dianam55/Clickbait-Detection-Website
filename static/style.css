@@ -11,6 +11,10 @@
     font-family: "Livvic", sans-serif;
     }
     body{
+        background: linear-gradient(114.523deg, #E1FFE5 0%, #9ED9D6 19%, #6dcab9 30%, #24428F 100%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
         width: 100%;
         height: 100%;
     }
@@ -37,16 +41,28 @@
         filter: drop-shadow(0px 2px #dddddd);
     }
     .header{
-        background: linear-gradient(114.523deg, #E1FFE5 0%, #9ED9D6 19%, #6dcab9 50%, #24428F 100%);
         width: 100%;
         height: 100%;
-        padding-bottom: 6rem;
+        padding-bottom: 2rem;
+    }
+    .mode{
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 5rem;
+        margin-bottom: 1rem;
+    }
+    #darkBtn{
+        width: 2rem;
+        cursor: pointer;
+    }
+    #lightBtn{
+        display: none;
     }
     .content-submit{
         display: flex;
         gap: 5rem;
         margin: 0rem 5rem 5rem 5rem;
-        background-color: #EAF5F5;
+        background-color: #f0fdfd9e;
         border-radius: 10px;
         border: 2px solid #696a8e;
         padding: 5rem;
@@ -190,27 +206,94 @@
         background-color: #ffffff;
     }
 
-    @media(min-width: 1281px) and (max-width: 1600px){
+    /*Dark mode*/
+    body.dark-mode {
+        background: linear-gradient(102.022deg, #FFC27B 0%, #426967 19%, #1A3136 38%, #081126 100%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .dark-mode h1{
+        color: #DEEBFF;
+    }
+    .dark-mode h2{
+        color: #DEEBFF;
+    }
+    .dark-mode .content-submit {
+        background-color: #2a2e2eda;
+        border-color: #B8B8B8;
+    }
+    .dark-mode .content-dreapta {
+        background-color: #202020;
+        border-color: #5D719D;
+    }
+    .dark-mode textarea{
+        background-color: #202020;
+        color: #fff;
+        border-color: #5D719D;
+    }
+    .dark-mode .btn-language {
+        background-color: #1E323C;
+        border-color: #5D719D;
+    }
+    .dark-mode .btn-language:hover{
+        background-color: #27414f;
+    }
+    .dark-mode .btn-language.selected {
+        border: 2px solid #5D719D;
+        background-color: #a4bfff73;
+        border-radius: 5px;
+    }
+    .dark-mode .btn-submit{
+        color: #1E323C;
+    }
+    .dark-mode textarea:disabled {
+        background-color: #202020;
+    }
+    .dark-mode #result {
+        color: #DEEBFF;
+    }
+    .dark-mode #result .prediction-text.clickbait {
+        color: #ffab5c;
+    }
+    .dark-mode #result .prediction-text.not-clickbait {
+        color: #7583DE;
+    }
+    .dark-mode #languageWarning{
+        color: #7583DE;
+    }
 
+    #darkBtn {
+        display: block; /* Show moon in light mode */
+    }
+    #lightBtn {
+        display: none; /* Hide sun in light mode */
+    }
+    body.dark-mode #darkBtn {
+        display: none; /* Hide moon in dark mode */
+    }
+    body.dark-mode #lightBtn {
+        display: block; /* Show sun in dark mode */
+        width: 2rem;
+        cursor: pointer;
+    }
+
+    @media(min-width: 1281px) and (max-width: 1600px){
         .content-submit{
             gap: 5rem;
         }
-
         .content-stanga {
             width: 550px;
         }
-
         .headline {
             width: 550px;
             height: 200px;
         }
-
         .submit-and-char-count {
             bottom: 10px;
             left: 320px;
             gap: 0.7rem;
         }
-
         .content-dreapta {
             width: 350px;
             height: 300px;
@@ -225,64 +308,52 @@
             padding: 2rem;
             align-items: center;
         }
-
         .content-stanga {
             width: 600px;
             gap: 1rem;
         }
-
         .headline {
             width: 580px;
             height: 180px;
         }
-
         .paste-delete {
             right: 30px;
             top: 10px;
             gap: 0.7rem;
         }
-
         .submit-and-char-count {
             bottom: 10px;
             left: 390px;
             gap: 0.7rem;
         }
-
         .char-count {
             font-size: 0.9rem;
             width: 70px;
             margin-top: 1rem;
         }
-
         .btn-submit {
             font-size: 1rem;
             padding: 0.5rem 1.5rem;
         }
-
         .content-dreapta {
             width: 350px;
             height: 270px;
             margin-top: 1.5rem;
         }
-
         h1 {
             font-size: 2.2rem;
             padding: 1.5rem 0;
         }
-
         h2 {
             font-size: 1.5rem;
         }
-
         #result {
             font-size: 1.2rem;
         }
-
         .btn-language img {
             width: 25px;
             height: 25px;
         }
-
         #pasteBtn, #deleteBtn, #csvBtn {
             width: 28px;
             height: 28px;
@@ -297,64 +368,52 @@
             padding: 2rem;
             align-items: center;
         }
-
         .content-stanga {
             width: 330px;
             gap: 1rem;
         }
-
         .headline {
             width: 320px;
             height: 180px;
         }
-
         .paste-delete {
             right: 20px;
             top: 10px;
             gap: 0.7rem;
         }
-
         .submit-and-char-count {
             bottom: 10px;
             left: 140px;
             gap: 0.7rem;
         }
-
         .char-count {
             font-size: 0.8rem;
             width: 65px;
             margin-top: 1rem;
         }
-
         .btn-submit {
             font-size: 1rem;
             padding: 0.4rem 1.4rem;
         }
-
         .content-dreapta {
             width: 320px;
             height: 270px;
             margin-top: 1.5rem;
         }
-
         h1 {
             font-size: 2rem;
             padding: 1.4rem 0;
         }
-
         h2 {
             font-size: 1.5rem;
         }
-
         #result {
             font-size: 1.1rem;
         }
-
         .btn-language img {
             width: 22px;
             height: 22px;
         }
-
         #pasteBtn, #deleteBtn, #csvBtn {
             width: 25px;
             height: 25px;
@@ -369,68 +428,56 @@
             flex-direction: column;
             margin: 0 1rem 1rem 1rem;
             gap: 2rem;
-            padding: 0.5rem;
+            padding: 1.5rem 0.5rem 1.5rem 0.5rem;
             align-items: center;
         }
-
         .content-stanga {
             width: 300px;
             gap: 1rem;
             margin-left: 1.5rem;
         }
-
         .headline {
             width: 270px;
             height: 180px;
         }
-
         .paste-delete {
             right: 40px;
             top: 10px;
             gap: 0.7rem;
         }
-
         .submit-and-char-count {
             bottom: 10px;
             left: 90px;
             gap: 0.7rem;
         }
-
         .char-count {
             font-size: 0.8rem;
             width: 65px;
             margin-top: 1rem;
         }
-
         .btn-submit {
             font-size: 1rem;
             padding: 0.4rem 1.4rem;
         }
-
         .content-dreapta {
             width: 270px;
             height: 230px;
             margin-top: 1.5rem;
         }
-
         h1 {
             font-size: 1.9rem;
             padding: 1.4rem 0;
         }
-
         h2 {
             font-size: 1.3rem;
         }
-
         #result {
             font-size: 1rem;
         }
-
         .btn-language img {
             width: 20px;
             height: 20px;
         }
-
         #pasteBtn, #deleteBtn, #csvBtn {
             width: 24px;
             height: 24px;
@@ -438,13 +485,61 @@
         .csv-status {
             font-size: 1rem;
         }
-
         #icon-warning{
             width: 15px;
             height: 15px;
         }
-
         #languageWarning{
             font-size: 0.6rem;
         }
     }
+
+/* Info Section */
+
+.section-informations{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 2rem;
+}
+.content-informations{
+    width: 95rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.disclaimer{
+    background-color: #f0fdfd9e;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 2px solid #696a8e;
+    font-size: 1.4rem;
+    color: #4b4c66;
+}
+.instructions{
+    background-color: #f0fdfd9e;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 2px solid #696a8e;
+    font-size: 1.4rem;
+    color: #4b4c66;
+}
+.theory{
+    background-color: #f0fdfd9e;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 2px solid #696a8e;
+    font-size: 1.4rem;
+    color: #4b4c66;
+}
+
+/* Dark mode */
+
+.dark-mode .disclaimer, .dark-mode .instructions, .dark-mode .theory{
+    background-color: #2a2e2eda;
+    border: 2px solid #B8B8B8;
+    color: #DEEBFF;
+    font-size: 1.4rem;
+}
