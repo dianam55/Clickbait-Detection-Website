@@ -19,6 +19,10 @@
 <body>
     <header class="header">
         <h1>Clickbait Detector</h1>
+        <div class="mode">
+            <img id="darkBtn" src="{{ url_for('static', filename='images/moon.svg') }}" alt="Dark mode" title="Dark Mode">
+            <img id="lightBtn" src="{{ url_for('static', filename='images/sun.svg') }}" alt="Light mode" title="Light Mode">
+        </div>
         <div class="content-submit">
             <div class="content-stanga">
                 <h2>Enter a headline example! :D</h2>
@@ -52,9 +56,39 @@
             </div>
         </div>
     </header>
+
+    <section class="section-informations">
+        <div class="content-informations">
+            <div class="disclaimer">
+                <p class="p-info">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus ab adipisci omnis iure, molestiae possimus odio reiciendis. 
+                    Quis non minus, dignissimos iure, ex molestiae fuga eius distinctio beatae, veritatis in?</p>
+            </div>
+            <div class="instructions">
+                <p class="p-info">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam perferendis autem illo non,
+                     totam alias iusto laboriosam voluptatem ratione doloremque odio tempore illum facilis nemo repudiandae a quae impedit? Sint?</p>
+            </div>
+            <div class="theory">
+                <p class="p-info">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    Atque incidunt necessitatibus possimus dolor pariatur ratione fuga reprehenderit saepe animi placeat quisquam dolorem dolores recusandae mollitia, eius sint provident. Esse, praesentium.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    Atque incidunt necessitatibus possimus dolor pariatur ratione fuga reprehenderit saepe animi placeat quisquam dolorem dolores recusandae mollitia, eius sint provident. Esse, praesentium</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        
+    </footer>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+        window.themeImages = {
+            moon: "{{ url_for('static', filename='images/moon.svg') }}",
+            sun: "{{ url_for('static', filename='images/sun.svg') }}"
+        };
+</script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="{{ url_for('static', filename='index.js') }}"></script>
 </html>
