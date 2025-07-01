@@ -94,14 +94,15 @@
         right: 90px;
         top: 15px;
     }
-    #pasteBtn, #deleteBtn {
+    #pasteBtn, #deleteBtn, #csvBtn {
         width: 35px;
         height: 35px;
         cursor: pointer;
         transition: opacity 0.3s ease;
     }
-    #pasteBtn:hover, #deleteBtn:hover {
+    #pasteBtn:hover, #deleteBtn:hover, #csvBtn:hover {
         opacity: 0.7;
+        color: #1f3f6b;
     }
     .submit-and-char-count{
         display: flex;
@@ -180,4 +181,11 @@
         font-size: 0.8rem;
         color:#4b4c66;
         text-align: center;
+    }
+    .csv-status {
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+    textarea:disabled {
+        background-color: #ffffff;
     }
