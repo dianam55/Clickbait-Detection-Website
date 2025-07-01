@@ -322,7 +322,27 @@ csvInput.addEventListener('change', () => {
         csvUploaded = false;
         textarea.disabled = false;
     }
-
     updateIcons();
 });
 
+
+// dark mode
+
+const darkBtn = document.getElementById('darkBtn');
+const lightBtn = document.getElementById('lightBtn');
+
+function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+// Add event listeners for both buttons
+darkBtn.addEventListener('click', toggleTheme);
+lightBtn.addEventListener('click', toggleTheme);
+
+// Apply saved theme on load
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+});
