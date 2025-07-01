@@ -6,6 +6,7 @@ const enButton = document.querySelector('.btn-language img[alt="english"]').pare
 const roButton = document.querySelector('.btn-language img[alt="romanian"]').parentElement;
 const huButton = document.querySelector('.btn-language img[alt="hungarian"]').parentElement;
 const resultElement = document.querySelector('#result');
+const loadingIndicator = document.getElementById('csvLoading');
 
 highlightSelected(enButton);
 
@@ -20,7 +21,7 @@ async function makePrediction(text, endpoint) {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000${endpoint}`, {
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,6 +60,70 @@ async function makePrediction(text, endpoint) {
     }
 }
 
+async function processCsvFile() { 
+    const file = csvInput.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: async (results) => {
+            const rows = results.data;
+            const headers = results.meta.fields;
+
+            if (!headers.includes("Headline")) {
+                alert("CSV must contain a column named 'Headline'.");
+                return;
+            }
+
+            const outputRows = [];
+
+            for (const row of rows) {
+                const headline = row.Headline?.trim();
+
+                if (!headline) {
+                    outputRows.push({ ...row, Prediction: 'Error: Empty' });
+                    continue;
+                }
+
+                try {
+                    const res = await fetch(`/predict/${selectedLanguage}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: headline })
+                    });
+
+                    const data = await res.json();
+
+                    if (data.error) {
+                        outputRows.push({ ...row, Prediction: `Error: ${data.error}` });
+                    } else {
+                        const label = data.prediction === 1 ? 1 : 0;
+                        outputRows.push({ ...row, Prediction: label });
+                    }
+                } catch (err) {
+                    outputRows.push({ ...row, Prediction: 'Error: Request failed' });
+                }
+            }
+
+            const newCsv = Papa.unparse(outputRows);
+            const blob = new Blob([newCsv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = file.name.replace('.csv', '_with_predictions.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        },
+        error: (err) => {
+            alert("Error parsing CSV: " + err.message);
+        }
+    });
+}
+
 enButton.addEventListener('click', () => {
     selectedLanguage = 'en';
     highlightSelected(enButton);
@@ -84,9 +149,21 @@ detectBtn.addEventListener('click', async () => {
     const warningWrapper = document.querySelector('.warning');
     const warningElement = document.getElementById('languageWarning');
 
-    //clear previous warning
     warningWrapper.style.display = 'none';
     warningElement.textContent = '';
+    resultElement.textContent = '';
+
+    if (csvUploaded) {
+        processCsvFile();
+        return;
+    }
+
+    const words = text.split(/\s+/).filter(word => /\w/.test(word));
+    if (words.length < 4) {
+        resultElement.textContent = 'Please enter at least 4 words.';
+        flashResult();
+        return;
+    }
 
     if (!text) {
         resultElement.textContent = 'Please enter a headline.';
@@ -95,34 +172,26 @@ detectBtn.addEventListener('click', async () => {
 
     let detectedLang = null;
 
-    //detect language
     try {
-        const langResponse = await fetch('http://localhost:5000/detect_language', {
+        const langResponse = await fetch('/detect_language', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
+            body: JSON.stringify({ text })
         });
 
         const langData = await langResponse.json();
-
-        if (langData.language) {
-            detectedLang = langData.language;
-        } else {
-            warningElement.textContent = "Language detection failed.";
-            warningWrapper.style.display = 'flex';
-        }
+        if (langData.language) detectedLang = langData.language;
+        else warningElement.textContent = "Language detection failed.";
     } catch (error) {
-        console.error("Language detection error:", error);
         warningElement.textContent = "Error during language detection.";
+        console.error(error);
     }
 
-    //warning
     if (detectedLang && selectedLanguage && detectedLang !== selectedLanguage) {
         warningElement.textContent = "Are you sure you selected the right language?";
         warningWrapper.style.display = 'flex';
     }
 
-    //prediction
     if (!selectedLanguage) {
         resultElement.textContent = 'Please select a language first.';
         return;
@@ -139,7 +208,6 @@ let chart;
 function renderConfidenceChart(confidence) {
     const ctx = document.getElementById('confidenceChart').getContext('2d');
     
-    // Destroy previous chart if it exists
     if (chart) {
         chart.destroy();
     }
@@ -176,10 +244,15 @@ function renderConfidenceChart(confidence) {
 
 const pasteBtn = document.getElementById('pasteBtn');
 const deleteBtn = document.getElementById('deleteBtn');
+const csvBtn = document.getElementById('csvBtn');
+const csvInput = document.getElementById('csvInput');
+const csvStatus = document.getElementById('csvStatus');
+const originalPlaceholder = textarea.placeholder;
+let csvUploaded = false;
 
 function updateIcons() {
     const text = textarea.value.trim();
-    if (text.length === 0) {
+    if (text.length === 0 && !csvUploaded) {
         pasteBtn.style.display = 'inline';
         deleteBtn.style.display = 'none';
     } else {
@@ -191,27 +264,65 @@ function updateIcons() {
 textarea.addEventListener('input', updateIcons);
 updateIcons();
 
-//paste button 
+//paste button functionality
 pasteBtn.addEventListener('click', async () => {
     try {
         const text = await navigator.clipboard.readText();
         textarea.value = text;
-        updateIcons(); // update button visibility
+        updateIcons(); 
     } catch (err) {
         alert('Could not read from clipboard. Make sure clipboard permissions are allowed.');
         console.error('Clipboard error:', err);
     }
 });
 
-//delete button
+//delete button functionality
 deleteBtn.addEventListener('click', () => {
     textarea.value = '';
-    updateIcons(); // update button visibility
+
+    if (csvUploaded) {
+        csvInput.value = ''; 
+        csvStatus.textContent = '';
+        csvUploaded = false;
+        textarea.disabled = false;
+        textarea.placeholder = originalPlaceholder;
+    }
+
+    resultElement.textContent = '';
+    updateIcons();
+
 });
 
 //character counter
 const charCount = document.querySelector('.char-count');
 textarea.addEventListener('input', () => {
     charCount.textContent = `${textarea.value.length} / 200`;
-    updateIcons(); 
+    updateIcons();
 });
+
+//csv
+csvBtn.addEventListener('click', () => {
+    csvInput.click();
+});
+
+csvInput.addEventListener('change', () => {
+    const file = csvInput.files[0];
+
+    if (file && file.name.endsWith('.csv')) {
+        textarea.value = '';
+        textarea.disabled = true;
+        textarea.placeholder = '';
+        csvUploaded = true;
+
+        csvStatus.textContent = `${file.name}`;
+        csvStatus.style.color = '#58A3AD';
+    } else {
+        csvStatus.textContent = 'Invalid file. Please upload a CSV.';
+        csvStatus.style.color = 'red';
+        csvUploaded = false;
+        textarea.disabled = false;
+    }
+
+    updateIcons();
+});
+
