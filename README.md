@@ -10,5 +10,6 @@ Features:
 - Feedback on headline classification
 - Character counter and warning if detected language doesn't match selected one
 - CSV upload (*the csv file needs to have a column named "Headline")
+- Dark Mode
 
 The models used here were trained in a separate repository: https://github.com/dianam55/clickbait-detector-en-ro-hu
