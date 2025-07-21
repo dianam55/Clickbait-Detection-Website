@@ -25,40 +25,72 @@ DetectorFactory.seed = 0
 app = Flask(__name__)
 CORS(app)
 
-#transformers
-en_tokenizer_transformer = DistilBertTokenizer.from_pretrained("models/EN/transformer/en_distilbert_tokenizer")
-en_model_transformer = TFDistilBertForSequenceClassification.from_pretrained("models/EN/transformer/en_distilbert_clickbait_model")
-ro_tokenizer_transformer = BertTokenizer.from_pretrained("models/RO/transformer/ro_bert_tokenizer"  )
-ro_model_transformer = TFBertForSequenceClassification.from_pretrained("models/RO/transformer/ro_bert_clickbait_model")
-hu_tokenizer_transformer = BertTokenizer.from_pretrained("models/HU/transformer/hu_bert_tokenizer"  )
-hu_model_transformer = TFBertForSequenceClassification.from_pretrained("models/HU/transformer/hu_bert_clickbait_model")
+def download_file(url, local_path):
+    """Helper to download a file from a URL if it doesn't exist locally."""
+    if not os.path.exists(local_path):
+        print(f"Downloading {url} to {local_path} ...")
+        r = requests.get(url)
+        r.raise_for_status()
+        with open(local_path, "wb") as f:
+            f.write(r.content)
 
+#Transformer models
+en_tokenizer_transformer = DistilBertTokenizer.from_pretrained("DianaM55/en_distilbert_tokenizer")
+en_model_transformer = TFDistilBertForSequenceClassification.from_pretrained("DianaM55/en_distilbert_clickbait_model")
 
-#svm
-en_tokenizer_svm = SentenceTransformer("models/EN/svm/en_sbert_model")
+ro_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/ro_bert_tokenizer")
+ro_model_transformer = TFBertForSequenceClassification.from_pretrained("DianaM55/ro_bert_clickbait_model")
+
+hu_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/hu_bert_tokenizer")
+hu_model_transformer = TFBertForSequenceClassification.from_pretrained("DianaM55/hu_bert_clickbait_model")
+
+en_tokenizer_svm = SentenceTransformer("DianaM55/en_sbert_model")
+if not os.path.exists("models/EN/svm/en_svm_model.pkl"):
+    download_file("https://huggingface.co/DianaM55/en_svm_model/resolve/main/en_svm_model.pkl", "models/EN/svm/en_svm_model.pkl")
 en_model_svm = joblib.load("models/EN/svm/en_svm_model.pkl")
+
+if not os.path.exists("models/RO/svm/ro_tfidf_vectorizer.pkl"):
+    download_file("https://huggingface.co/DianaM55/ro_tfidf_vectorizer/resolve/main/ro_tfidf_vectorizer.pkl", "models/RO/svm/ro_tfidf_vectorizer.pkl")
 ro_tokenizer_svm = joblib.load("models/RO/svm/ro_tfidf_vectorizer.pkl")
+
+if not os.path.exists("models/RO/svm/ro_svm_model.pkl"):
+    download_file("https://huggingface.co/DianaM55/ro_svm_model/resolve/main/ro_svm_model.pkl", "models/RO/svm/ro_svm_model.pkl")
 ro_model_svm = joblib.load("models/RO/svm/ro_svm_model.pkl")
-hu_tokenizer_svm =  joblib.load("models/HU/svm/hu_tfidf_vectorizer.pkl")
+
+if not os.path.exists("models/HU/svm/hu_tfidf_vectorizer.pkl"):
+    download_file("https://huggingface.co/DianaM55/hu_tfidf_vectorizer/resolve/main/hu_tfidf_vectorizer.pkl", "models/HU/svm/hu_tfidf_vectorizer.pkl")
+hu_tokenizer_svm = joblib.load("models/HU/svm/hu_tfidf_vectorizer.pkl")
+
+if not os.path.exists("models/HU/svm/hu_svm_model.pkl"):
+    download_file("https://huggingface.co/DianaM55/hu_svm_model/resolve/main/hu_svm_model.pkl", "models/HU/svm/hu_svm_model.pkl")
 hu_model_svm = joblib.load("models/HU/svm/hu_svm_model.pkl")
 
+#RF
+en_tokenizer_rf = SentenceTransformer("DianaM55/en_rf_sbert_model")
 
-#rf
-en_tokenizer_rf = SentenceTransformer("models/EN/rf/en_rf_sbert_model")
+for fname, url in [
+    ("models/EN/rf/en_rf_model.pkl", "https://huggingface.co/DianaM55/en_rf_model/resolve/main/en_rf_model.pkl"),
+    ("models/EN/rf/en_rf_scaler.pkl", "https://huggingface.co/DianaM55/en_rf_scaler/resolve/main/en_rf_scaler.pkl"),
+    ("models/RO/rf/rf_tfidf_vectorizer_ro.pkl", "https://huggingface.co/DianaM55/rf_tfidf_vectorizer_ro/resolve/main/rf_tfidf_vectorizer_ro.pkl"),
+    ("models/RO/rf/rf_model_ro.pkl", "https://huggingface.co/DianaM55/rf_model_ro/resolve/main/rf_model_ro.pkl"),
+    ("models/RO/rf/rf_scaler_ro.pkl", "https://huggingface.co/DianaM55/rf_scaler_ro/resolve/main/rf_scaler_ro.pkl"),
+    ("models/HU/rf/hu_rf_tfidf_vectorizer.pkl", "https://huggingface.co/DianaM55/hu_rf_tfidf_vectorizer/resolve/main/hu_rf_tfidf_vectorizer.pkl"),
+    ("models/HU/rf/hu_rf_model.pkl", "https://huggingface.co/DianaM55/hu_rf_model/resolve/main/hu_rf_model.pkl"),
+    ("models/HU/rf/hu_rf_scaler.pkl", "https://huggingface.co/DianaM55/hu_rf_scaler/resolve/main/hu_rf_scaler.pkl")
+]:
+    if not os.path.exists(fname):
+        download_file(url, fname)
+
 with open('models/EN/rf/en_rf_model.pkl', 'rb') as f:
     en_model_rf = pickle.load(f)
 with open('models/EN/rf/en_rf_scaler.pkl', 'rb') as f:
     en_scaler_rf = pickle.load(f)
-
-print("EN RF model:", type(en_model_rf), "Has predict_proba:", hasattr(en_model_rf, "predict_proba"))
-
 with open('models/RO/rf/rf_tfidf_vectorizer_ro.pkl', 'rb') as f:
     ro_tokenizer_rf = pickle.load(f)
 with open('models/RO/rf/rf_model_ro.pkl', 'rb') as f:
     ro_model_rf = pickle.load(f)
 with open('models/RO/rf/rf_scaler_ro.pkl', 'rb') as f:
     ro_scaler_rf = pickle.load(f)
-
 with open('models/HU/rf/hu_rf_tfidf_vectorizer.pkl', 'rb') as f:
     hu_tokenizer_rf = pickle.load(f)
 with open('models/HU/rf/hu_rf_model.pkl', 'rb') as f:
@@ -66,8 +98,18 @@ with open('models/HU/rf/hu_rf_model.pkl', 'rb') as f:
 with open('models/HU/rf/hu_rf_scaler.pkl', 'rb') as f:
     hu_scaler_rf = pickle.load(f)
 
+#LSTM
+for fname, url in [
+    ("models/EN/lstm/en_lstm_tokenizer.pkl", "https://huggingface.co/DianaM55/en_lstm_tokenizer/resolve/main/en_lstm_tokenizer.pkl"),
+    ("models/EN/lstm/en_lstm_model.h5", "https://huggingface.co/DianaM55/en_lstm_model/resolve/main/en_lstm_model.h5"),
+    ("models/RO/lstm/ro_lstm_tokenizer.pkl", "https://huggingface.co/DianaM55/ro_lstm_tokenizer/resolve/main/ro_lstm_tokenizer.pkl"),
+    ("models/RO/lstm/ro_lstm_model.h5", "https://huggingface.co/DianaM55/ro_lstm_model/resolve/main/ro_lstm_model.h5"),
+    ("models/HU/lstm/hu_lstm_tokenizer.pkl", "https://huggingface.co/DianaM55/hu_lstm_tokenizer/resolve/main/hu_lstm_tokenizer.pkl"),
+    ("models/HU/lstm/hu_lstm_model.h5", "https://huggingface.co/DianaM55/hu_lstm_model/resolve/main/hu_lstm_model.h5")
+]:
+    if not os.path.exists(fname):
+        download_file(url, fname)
 
-#lstm
 with open('models/EN/lstm/en_lstm_tokenizer.pkl', 'rb') as f:
     en_tokenizer_lstm = pickle.load(f)
 en_model_lstm = load_model('models/EN/lstm/en_lstm_model.h5')
