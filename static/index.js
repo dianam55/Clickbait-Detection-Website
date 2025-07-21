@@ -20,6 +20,8 @@ const loadingIndicator = document.getElementById('csvLoading');
 
 const cancelButton = document.getElementById('cancelProcessingBtn');
 
+const confidenceNotice = document.getElementById('confidenceNotice');
+
 highlightSelectedLanguage(enButton);
 highlightSelectedModel(bertButton);
 
@@ -38,7 +40,7 @@ cancelButton.addEventListener('click', () => {
 
 // Result
 async function makePrediction(text, endpoint) {
-    if (!text) {
+   if (!text) {
         resultElement.textContent = 'Please enter a headline.';
         resultElement.classList.remove('blink');
         void resultElement.offsetWidth;
@@ -68,7 +70,6 @@ async function makePrediction(text, endpoint) {
         }
 
         const prediction = data.prediction;
-        const confidence = data.confidence;
         resultElement.innerHTML = `Your headline is likely: <span class="prediction-text">${prediction === 1 ? 'Clickbait' : 'Not Clickbait'}</span>`;
         const predictionSpan = resultElement.querySelector('.prediction-text');
         predictionSpan.classList.remove('clickbait', 'not-clickbait');
@@ -77,7 +78,19 @@ async function makePrediction(text, endpoint) {
         void resultElement.offsetWidth;
         resultElement.classList.add('blink');
         setTimeout(() => resultElement.classList.remove('blink'), 600);
-        renderConfidenceChart(confidence);
+
+        if (data.confidence && selectedModel !== 'rf') {
+            renderConfidenceChart(data.confidence);
+            confidenceNotice.classList.add('hidden');
+        } else {
+            if (chart) chart.destroy();
+            if (selectedModel === 'rf') {
+                confidenceNotice.classList.remove('hidden');
+            } else {
+            confidenceNotice.classList.add('hidden');
+            }
+        }
+
     } catch (error) {
         resultElement.textContent = `Error: ${error.message}`;
         resultElement.classList.remove('blink');
@@ -256,8 +269,8 @@ async function analyzeSentimentRO(text) {
             <div><strong>Subjectivity:</strong> ${data.subjectivity}</div>
         `;
         sentimentBox.style.display = 'block';
-        renderPolarityPie(polarity);
-        renderSubjectivityPie(subjectivity);
+        renderPolarityPie(data.polarity);
+        renderSubjectivityPie(data.subjectivity);
 
     } catch (err) {
         console.error("RO sentiment fetch error:", err);
@@ -284,8 +297,8 @@ async function analyzeSentimentHU(text) {
             <div><strong>Subjectivity:</strong> ${data.subjectivity}</div>
         `;
         box.style.display = 'block';
-        renderPolarityPie(polarity);
-        renderSubjectivityPie(subjectivity);
+        renderPolarityPie(data.polarity);
+        renderSubjectivityPie(data.subjectivity);
     } catch (err) {
         console.error("Error calling HU sentiment:", err);
     }
@@ -609,9 +622,20 @@ function toggleTheme() {
 darkBtn.addEventListener('click', toggleTheme);
 lightBtn.addEventListener('click', toggleTheme);
 
-// Apply theme
+//theme
 window.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
     }
 });
+
+//colapse
+const headers = document.querySelectorAll(".collapsible-header");
+
+  headers.forEach(header => {
+    header.addEventListener("click", () => {
+      const content = header.nextElementSibling;
+      header.classList.toggle("active");
+      content.classList.toggle("show");
+    });
+  });
