@@ -12,7 +12,7 @@ numpy
 requests
 gunicorn
 tf-keras
-keras<3
+
 
 
 
