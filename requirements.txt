@@ -1,5 +1,13 @@
 flask
 flask-cors
 transformers
-tensorflow
+tensorflow-cpu==2.13.0
 langdetect
+torch
+keras
+sentence-transformers
+textblob
+joblib
+numpy
+requests
+
