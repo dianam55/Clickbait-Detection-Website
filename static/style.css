@@ -160,7 +160,7 @@
         border: none;
         font-weight: 600;
         border-radius: 5px;
-        background-color: #ffc379;  /* #2886f8 */
+        background-color: #ffc379; 
         transition: transform 0.2s ease, background-color 0.2s ease;
         align-self: flex-end;
         cursor: pointer;
@@ -242,9 +242,25 @@
         justify-content: center;
         align-items: center;
     }
+    .confidence{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
     #confidenceChart{
         width: 32rem !important;
         height: 18rem !important;
+    }
+    .confidence-notice {
+        text-align: center;
+        width: 10rem;
+        color: #777;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+    .hidden {
+        display: none;
     }
     #polarityChart, #subjectivityChart{
         width: 10.5rem !important;
@@ -303,9 +319,11 @@
     }
     .dark-mode h1{
         color: #DEEBFF;
+        filter: drop-shadow(0px 2px #0000009f);
     }
     .dark-mode h2{
         color: #DEEBFF;
+        filter: drop-shadow(0px 2px #0000009f);
     }
     .dark-mode .content-submit {
         background-color: #2a2e2eda;
@@ -365,6 +383,9 @@
     #darkBtn {
         display: block; /* Show moon in light mode */
     }
+    #darkBtn:hover{
+        transform: scale(1.1);
+    }
     #lightBtn {
         display: none; /* Hide sun in light mode */
     }
@@ -375,6 +396,9 @@
         display: block; /* Show sun in dark mode */
         width: 2rem;
         cursor: pointer;
+    }
+    body.dark-mode #lightBtn:hover{
+        transform: scale(1.1);
     }
 
 
@@ -453,9 +477,13 @@
             width: 20rem;
             height: 50rem;
         }
+        .confidence-notice{
+            margin-bottom: 2.5rem;
+            margin-top: -5rem;
+        }
          #confidenceChart{
             width: 20rem !important;
-            height: 15rem !important;
+            height: 12rem !important;
         }
         #polarityChart, #subjectivityChart{
             width: 9.5rem !important;
@@ -478,6 +506,14 @@
         #pasteBtn, #deleteBtn, #csvBtn {
             width: 28px;
             height: 28px;
+        }
+        body.dark-mode #lightBtn{
+            width: 1.8rem;
+            margin-right: -3rem;
+        }
+        #darkBtn{
+            width: 1.8rem;
+            margin-right: -3rem;
         }
     }
 
@@ -524,18 +560,19 @@
             height: 40rem;
             margin-top: 1.5rem;
         }
-        #languageWarning{
-            margin-bottom: 1rem;
-        }
         .charts{
             flex-direction: column;
             width: 20rem;
             height: 36rem;
             gap: 1rem;
         }
+        .confidence-notice{
+            margin-bottom: 2.5rem;
+            margin-top: -5rem;
+        }
          #confidenceChart{
             width: 20rem !important;
-            height: 15rem !important;
+            height: 12rem !important;
         }
         #polarityChart, #subjectivityChart{
             width: 9.5rem !important;
@@ -561,6 +598,14 @@
         }
         .csv-status {
             font-size: 1.2rem;
+        }
+        body.dark-mode #lightBtn{
+            width: 1.8rem;
+            margin-right: -3rem;
+        }
+        #darkBtn{
+            width: 1.8rem;
+            margin-right: -3rem;
         }
     }
 
@@ -611,18 +656,20 @@
             height: 36rem;
             margin-top: 1.5rem;
         }
-        #languageWarning{
-            margin-bottom: 1rem;
-        }
         .charts{
             flex-direction: column;
             width: 16rem;
             height: 34rem;
             gap: 1rem;
         }
+        .confidence-notice{
+            font-size: 0.75rem;
+            margin-bottom: 2.5rem;
+            margin-top: -10rem;
+        }
          #confidenceChart{
             width: 15.5rem !important;
-            height: 11rem !important;
+            height: 9rem !important;
         }
         #polarityChart, #subjectivityChart{
             width: 8.5rem !important;
@@ -690,6 +737,7 @@
     font-size: 1.4rem;
     color: #4b4c66;
     display: flex;
+    flex-direction: column;
 }
 .instructions{
     background-color: #f0fdfd9e;
@@ -699,6 +747,7 @@
     font-size: 1.4rem;
     color: #4b4c66;
     display: flex;
+    flex-direction: column;
 }
 .theory{
     background-color: #f0fdfd9e;
@@ -709,6 +758,14 @@
     color: #4b4c66;
     display: flex;
     flex-direction: column;
+}
+.h2-info{
+    font-size: 2rem;
+    font-weight: 500;
+    color:#4b4c66;
+    text-align: left;
+    margin: 2rem 0;
+    filter: drop-shadow(0px 2px #dddddd);
 }
 .h3-info{
     font-size: 1.5rem;
@@ -721,6 +778,38 @@
 .p-info{
     font-size: 1.3rem;
 }
+.collapsible-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 0.5rem;
+}
+.collapsible-header:hover{
+    background-color: #ffc87062;
+    border-radius: 15px;
+    border: 1px solid #6cc0d1;
+    padding: 0.5rem;
+}
+.collapsible-header .arrow {
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+.collapsible-header.active .arrow {
+    transform: rotate(180deg);
+}
+.collapsible-content {
+    display: none;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+.collapsible-content.show {
+    display: block;
+}
+
 
 /* Dark mode */
 
@@ -729,6 +818,16 @@
     border: 2px solid #B8B8B8;
     color: #DEEBFF;
     font-size: 1.4rem;
+}
+.dark-mode .collapsible-header:hover{
+    background-color: #08112643;
+    border-radius: 15px;
+    border: 1px solid #081126;
+    padding: 0.5rem;
+}
+.dark-mode .h2-info{
+    color: #DEEBFF;
+    filter: drop-shadow(0px 2px #0000009f);
 }
 .dark-mode .h3-info{
     color: #DEEBFF;
@@ -745,6 +844,9 @@
     .content-informations{
         width: 75rem;
     }
+    .h2-info{
+        font-size: 1.7rem;
+    }
     .h3-info{
         font-size: 1.3rem;
     }
@@ -754,6 +856,9 @@
 }
 
 @media(min-width: 501px) and (max-width: 768px){
+    .h2-info{
+        font-size: 1.5rem;
+    }
     .h3-info{
         font-size: 1.2rem;
     }
@@ -762,6 +867,9 @@
     }
 }
 @media(min-width: 320px) and (max-width: 500px){
+    .h2-info{
+        font-size: 1.2rem;
+    }
     .h3-info{
         font-size: 1rem;
     }
