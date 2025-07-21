@@ -69,7 +69,14 @@
                     <p id="languageWarning" class="language-warning"></p>
                 </div>
                 <div class="charts">
-                    <canvas id="confidenceChart"></canvas>
+                    <div class="confidence">
+                        <canvas id="confidenceChart"></canvas>
+                        <div id="confidenceNotice" class="confidence-notice hidden">
+                            <span title="This model does not support probability estimates.">
+                                Confidence scores are not available for the Random Forest model.
+                            </span>
+                        </div>
+                    </div>
                     <div id="sentimentCharts">
                         <canvas id="polarityChart"></canvas>
                         <canvas id="subjectivityChart"></canvas>
@@ -83,49 +90,63 @@
     <section class="section-informations">
         <div class="content-informations">
             <div class="disclaimer">
+                <h2 class="h2-info">Disclaimer:</h2>
                 <p class="p-info">This tool uses an AI model trained to detect clickbait-style text based on specific datasets. 
                     While it can be helpful in flagging potentially misleading or sensational content, it's not perfect. 
                     The model's accuracy depends heavily on the nature of the training data, which means it may over-identify or miss certain types of content, especially if they differ from patterns seen during training</p>
             </div>
             <div class="instructions">
-                <p class="p-info">Choose a language (English, Romanian, or Hungarian) and select one of the available models (Transformers, SVM, Random Forest, or LSTM). 
-                    Then, enter a short piece of text into the input box to receive a prediction. The app will classify the text as either clickbait or not, provide a confidence score, and include a basic sentiment analysis. 
-                    You can also upload a CSV or Excel file containing multiple text entries. The app will process each line individually and return a downloadable version of the file with an added column containing the predictions.<br>
+                <h2 class="h2-info">How to use:</h2>
+                <p class="p-info">Choose a language (English, Romanian or Hungarian) and select one of the available models (Transformers, SVM, Random Forest or LSTM). 
+                    Then, enter a short piece of text into the input box to receive a prediction. The app will classify the text as either clickbait or not, provide a confidence score (Not available for Random Forest), and include a basic sentiment analysis.<br>
+                    You can also upload a CSV or Excel file containing multiple text entries (Must containe a column named "Headline"). The app will process each line individually and return a downloadable version of the file with an added column containing the predictions.<br>
                     For the best accuracy, using the Transformers model is recommended (approximately 97% accuracy in English, 88% in Romanian, and 88% in Hungarian).</p>
             </div>
             <div class="theory">
-                <h3 class="h3-info">Examples of text idetified as clickbait:</h2>
-                <h3 class="h3-info"> English:</h2>
-                <p class="p-info">
-                - Which Type Of Swearer Are You<br>
-                - 29 Impossibly Stylish Cat Gifts, In Order Of Awesomeness<br>
-                </p>
-                <h3 class="h3-info"> Romanian:</h2>
-                <p class="p-info">
-                - „Pățania” unui șofer român de TIR, în Olanda. Ce a pățit după ce a ignorat semnele de oprire, pe A7 (The "misadventure" of a Romanian truck driver in the Netherlands. What happened to him after he ignored stop signs on the A7)<br>
-                - N-ai fi crezut! Criteriul bizar după care o tânără de 26 de ani își alege partenerii (You wouldn't believe it! The bizarre criteria by which a 26-year-old woman chooses her partners)<br>
-                </p>
-                <h3 class="h3-info"> Hungarian:</h2>
-                <p class="p-info">
-                - A héten olyan hőség lesz, amiben már dolgozni sem lehet >>> Szünetet kell tartani munkavégzés közben!!! (This week will bring such extreme heat that working may become impossible >>> Breaks must be taken during work!!!)<br>
-                - Itt a nagy bejelentés! Karácsonyi ajándékot kapnak a 60 év felettiek! Csomagküldő szolgálat fogja kézbesíteni a csomagokat! Minden jogosult automatikusan megkapja! Itt a tájékoztató (Here comes the big announcement! People over 60 will receive Christmas gifts! A parcel delivery service will handle the distribution! Everyone eligible will receive it automatically! Here's the full information)<br>
-                </p>
-                <h3 class="h3-info">Examples of text idetified as non-clickbait:</h2>
-                <h3 class="h3-info"> English:</h2>
-                <p class="p-info">
-                - Authorities arrest 7 state officials over Mexico childcare centre fire<br>
-                - Plane makes emergency water landing in Darwin Harbour<br>
-                </p>
-                <h3 class="h3-info"> Romanian:</h2>
-                <p class="p-info">
-                - Accident grav în Buzău! Un tânăr de doar 24 de ani a murit, după ce s-a izbit puternic de o mașină de pompieri (Serious accident in Buzău! A 24-year-old man died after crashing into a fire truck)<br>
-                - Ninsorile au produs pagube însemnate în România. Mai multe localități au fost afectate de vremea rea (Snowfall caused significant damage in Romania. Several localities were affected by the bad weather)<br>
-                </p>
-                <h3 class="h3-info"> Hungarian:</h2>
-                <p class="p-info">
-                - Olaszos pöttyök és változó színvilág Ezek a Milánói Divathét legnagyobb trendjei (Italian polka dots and shifting color palettes These are the biggest trends of Milan Fashion Week)<br>
-                - Ezrekbe is kerülhet a csokimikulás, drágább idén az ünnepi édesség (Chocolate Santas can cost thousands, holiday sweets are more expensive this year)<br>
-                </p>
+                <h2 class="h2-info">Examples of text idetified as clickbait:</h2>
+                <h3 class="h3-info collapsible-header">English: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - Which Type Of Swearer Are You<br>
+                    - 29 Impossibly Stylish Cat Gifts, In Order Of Awesomeness<br>
+                    </p>
+                </div>
+                <h3 class="h3-info collapsible-header">Romanian: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - „Pățania” unui șofer român de TIR, în Olanda. Ce a pățit după ce a ignorat semnele de oprire, pe A7 (The "misadventure" of a Romanian truck driver in the Netherlands. What happened to him after he ignored stop signs on the A7)<br>
+                    - N-ai fi crezut! Criteriul bizar după care o tânără de 26 de ani își alege partenerii (You wouldn't believe it! The bizarre criteria by which a 26-year-old woman chooses her partners)<br>
+                    </p>
+                </div>
+                <h3 class="h3-info collapsible-header">Hungarian: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - A héten olyan hőség lesz, amiben már dolgozni sem lehet >>> Szünetet kell tartani munkavégzés közben!!! (This week will bring such extreme heat that working may become impossible >>> Breaks must be taken during work!!!)<br>
+                    - Itt a nagy bejelentés! Karácsonyi ajándékot kapnak a 60 év felettiek! Csomagküldő szolgálat fogja kézbesíteni a csomagokat! Minden jogosult automatikusan megkapja! Itt a tájékoztató (Here comes the big announcement! People over 60 will receive Christmas gifts! A parcel delivery service will handle the distribution! Everyone eligible will receive it automatically! Here's the full information)<br>
+                    </p>
+                </div>
+                <h2 class="h2-info">Examples of text idetified as non-clickbait:</h2>
+                <h3 class="h3-info collapsible-header"> English: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - Authorities arrest 7 state officials over Mexico childcare centre fire<br>
+                    - Plane makes emergency water landing in Darwin Harbour<br>
+                    </p>
+                </div>
+                <h3 class="h3-info collapsible-header"> Romanian: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - Accident grav în Buzău! Un tânăr de doar 24 de ani a murit, după ce s-a izbit puternic de o mașină de pompieri (Serious accident in Buzău! A 24-year-old man died after crashing into a fire truck)<br>
+                    - Ninsorile au produs pagube însemnate în România. Mai multe localități au fost afectate de vremea rea (Snowfall caused significant damage in Romania. Several localities were affected by the bad weather)<br>
+                    </p>
+                </div>
+                <h3 class="h3-info collapsible-header"> Hungarian: <span class="arrow">▼</span></h3>
+                <div class="collapsible-content">
+                    <p class="p-info">
+                    - Olaszos pöttyök és változó színvilág Ezek a Milánói Divathét legnagyobb trendjei (Italian polka dots and shifting color palettes These are the biggest trends of Milan Fashion Week)<br>
+                    - Ezrekbe is kerülhet a csokimikulás, drágább idén az ünnepi édesség (Chocolate Santas can cost thousands, holiday sweets are more expensive this year)<br>
+                    </p>
+                </div>
             </div>
         </div>
     </section>
