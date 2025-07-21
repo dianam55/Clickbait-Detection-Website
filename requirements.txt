@@ -10,4 +10,6 @@ textblob
 joblib
 numpy
 requests
+gunicorn
+
 
