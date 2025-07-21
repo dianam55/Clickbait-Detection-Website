@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disertatie - Clickbait Classification</title>
-    <meta name="description" content="Clickbait detection">
-    <meta name="googlebot" content="index,follow">
-    <meta name="robots" content="max-snippet:-1,max-image-preview:large,max-video-preview:-1"/>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Clickbait Classifier | Detect Misleading Headlines</title>
+    <meta name="description" content="Clickbait detection using machine learning. Supports multiple languages and models"/>
+
+    <meta name="robots" content="index, follow"/>
     <meta name="googlebot" content="max-snippet:-1,max-image-preview:large,max-video-preview:-1"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Livvic:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="icon" href="{{ url_for('static', filename='images/icon-site.svg') }}" type="image/svg+xml">
+
+    <meta property="og:title" content="Clickbait Classifier" />
+    <meta property="og:description" content="Detect misleading article titles using machine learning." />
+    <meta property="og:image" content="https://yourdomain.com/static/images/og-image.png" />
+    <meta property="og:url" content="https://yourdomain.com/" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Clickbait Classifier" />
+    <meta name="twitter:description" content="Detect misleading article titles using machine learning." />
+    <meta name="twitter:image" content="https://yourdomain.com/static/images/og-image.png" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Livvic:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet"/>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon-site.svg') }}" type="image/svg+xml"/>
 </head>
 
 <body>
@@ -93,14 +106,17 @@
                 <h2 class="h2-info">Disclaimer:</h2>
                 <p class="p-info">This tool uses an AI model trained to detect clickbait-style text based on specific datasets. 
                     While it can be helpful in flagging potentially misleading or sensational content, it's not perfect. 
-                    The model's accuracy depends heavily on the nature of the training data, which means it may over-identify or miss certain types of content, especially if they differ from patterns seen during training</p>
+                    The model's accuracy depends heavily on the nature of the training data, which means it may over-identify or miss certain types of content, especially if they differ from patterns seen during training. <br>
+                    If you wish to check the training data and source code for yourself, please access this link: <a href="https://github.com/dianam55/clickbait-detector-en-ro-hu.git" class="link-git">Source Code (GitHub)</a>
+                </p>
             </div>
             <div class="instructions">
                 <h2 class="h2-info">How to use:</h2>
                 <p class="p-info">Choose a language (English, Romanian or Hungarian) and select one of the available models (Transformers, SVM, Random Forest or LSTM). 
                     Then, enter a short piece of text into the input box to receive a prediction. The app will classify the text as either clickbait or not, provide a confidence score (Not available for Random Forest), and include a basic sentiment analysis.<br>
                     You can also upload a CSV or Excel file containing multiple text entries (Must containe a column named "Headline"). The app will process each line individually and return a downloadable version of the file with an added column containing the predictions.<br>
-                    For the best accuracy, using the Transformers model is recommended (approximately 97% accuracy in English, 88% in Romanian, and 88% in Hungarian).</p>
+                    For the best accuracy, using the Transformers model is recommended (approximately 97% accuracy in English, 88% in Romanian, and 88% in Hungarian).
+                </p>
             </div>
             <div class="theory">
                 <h2 class="h2-info">Examples of text idetified as clickbait:</h2>
