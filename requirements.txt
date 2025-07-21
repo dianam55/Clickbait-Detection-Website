@@ -1,7 +1,7 @@
 flask
 flask-cors
 transformers
-tensorflow-cpu==2.11.0
+tensorflow-cpu==2.19.0
 langdetect
 torch
 keras
