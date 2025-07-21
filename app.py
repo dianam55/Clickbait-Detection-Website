@@ -10,6 +10,7 @@ from flask_cors import CORS
 from keras.models import load_model
 import os
 import re
+import requests
 import tensorflow as tf
 import numpy as np
 from langdetect import detect, DetectorFactory
