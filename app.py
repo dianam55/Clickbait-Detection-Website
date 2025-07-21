@@ -1,6 +1,7 @@
 from typing import Dict, Any
 from flask import Flask, send_from_directory, jsonify, request
 from transformers import BertTokenizer, TFBertForSequenceClassification, DistilBertTokenizer, TFDistilBertForSequenceClassification
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 from keras.preprocessing.sequence import pad_sequences
 import tensorflow as tf
 from sentence_transformers import SentenceTransformer
@@ -26,6 +27,62 @@ DetectorFactory.seed = 0
 app = Flask(__name__)
 CORS(app)
 
+"""
+#transformers
+en_tokenizer_transformer = DistilBertTokenizer.from_pretrained("models/EN/transformer/en_distilbert_tokenizer")
+en_model_transformer = TFDistilBertForSequenceClassification.from_pretrained("models/EN/transformer/en_distilbert_clickbait_model")
+ro_tokenizer_transformer = BertTokenizer.from_pretrained("models/RO/transformer/ro_bert_tokenizer"  )
+ro_model_transformer = TFBertForSequenceClassification.from_pretrained("models/RO/transformer/ro_bert_clickbait_model")
+hu_tokenizer_transformer = BertTokenizer.from_pretrained("models/HU/transformer/hu_bert_tokenizer"  )
+hu_model_transformer = TFBertForSequenceClassification.from_pretrained("models/HU/transformer/hu_bert_clickbait_model")
+
+
+#svm
+en_tokenizer_svm = SentenceTransformer("models/EN/svm/en_sbert_model")
+en_model_svm = joblib.load("models/EN/svm/en_svm_model.pkl")
+ro_tokenizer_svm = joblib.load("models/RO/svm/ro_tfidf_vectorizer.pkl")
+ro_model_svm = joblib.load("models/RO/svm/ro_svm_model.pkl")
+hu_tokenizer_svm =  joblib.load("models/HU/svm/hu_tfidf_vectorizer.pkl")
+hu_model_svm = joblib.load("models/HU/svm/hu_svm_model.pkl")
+
+
+#rf
+en_tokenizer_rf = SentenceTransformer("models/EN/rf/en_rf_sbert_model")
+with open('models/EN/rf/en_rf_model.pkl', 'rb') as f:
+    en_model_rf = pickle.load(f)
+with open('models/EN/rf/en_rf_scaler.pkl', 'rb') as f:
+    en_scaler_rf = pickle.load(f)
+
+print("EN RF model:", type(en_model_rf), "Has predict_proba:", hasattr(en_model_rf, "predict_proba"))
+
+with open('models/RO/rf/rf_tfidf_vectorizer_ro.pkl', 'rb') as f:
+    ro_tokenizer_rf = pickle.load(f)
+with open('models/RO/rf/rf_model_ro.pkl', 'rb') as f:
+    ro_model_rf = pickle.load(f)
+with open('models/RO/rf/rf_scaler_ro.pkl', 'rb') as f:
+    ro_scaler_rf = pickle.load(f)
+
+with open('models/HU/rf/hu_rf_tfidf_vectorizer.pkl', 'rb') as f:
+    hu_tokenizer_rf = pickle.load(f)
+with open('models/HU/rf/hu_rf_model.pkl', 'rb') as f:
+    hu_model_rf = pickle.load(f)
+with open('models/HU/rf/hu_rf_scaler.pkl', 'rb') as f:
+    hu_scaler_rf = pickle.load(f)
+
+
+#lstm
+with open('models/EN/lstm/en_lstm_tokenizer.pkl', 'rb') as f:
+    en_tokenizer_lstm = pickle.load(f)
+en_model_lstm = load_model('models/EN/lstm/en_lstm_model.h5')
+with open('models/RO/lstm/ro_lstm_tokenizer.pkl', 'rb') as f:
+    ro_tokenizer_lstm = pickle.load(f)
+ro_model_lstm = load_model('models/RO/lstm/ro_lstm_model.h5')
+with open('models/HU/lstm/hu_lstm_tokenizer.pkl', 'rb') as f:
+    hu_tokenizer_lstm = pickle.load(f)
+hu_model_lstm = load_model('models/HU/lstm/hu_lstm_model.h5')
+"""
+
+
 def download_file(url, local_path):
     """Helper to download a file from a URL if it doesn't exist locally."""
     if not os.path.exists(local_path):
@@ -36,16 +93,19 @@ def download_file(url, local_path):
             f.write(r.content)
 
 #Transformer models
-en_tokenizer_transformer = DistilBertTokenizer.from_pretrained("DianaM55/en_distilbert_tokenizer")
-en_model_transformer = TFDistilBertForSequenceClassification.from_pretrained("DianaM55/en_distilbert_clickbait_model")
+en_model_transformer = TFDistilBertForSequenceClassification.from_pretrained("DianaM55/en_distilbert_clickbait_model", subfolder="en_distilbert_clickbait_model")
+en_tokenizer_transformer = DistilBertTokenizer.from_pretrained("DianaM55/en_distilbert_clickbait_model", subfolder="en_distilbert_tokenizer")
 
-ro_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/ro_bert_tokenizer")
-ro_model_transformer = TFBertForSequenceClassification.from_pretrained("DianaM55/ro_bert_clickbait_model")
+ro_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/ro_bert_clickbait_model", subfolder="ro_bert_tokenizer")
+ro_model_transformer = TFAutoModelForSequenceClassification.from_pretrained("DianaM55/ro_bert_clickbait_model", subfolder="ro_bert_clickbait_model")
 
-hu_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/hu_bert_tokenizer")
-hu_model_transformer = TFBertForSequenceClassification.from_pretrained("DianaM55/hu_bert_clickbait_model")
+hu_tokenizer_transformer = BertTokenizer.from_pretrained("DianaM55/hu_bert_clickbait_model", subfolder="hu_bert_tokenizer")
+hu_model_transformer = TFAutoModelForSequenceClassification.from_pretrained("DianaM55/hu_bert_clickbait_model", subfolder="hu_bert_clickbait_model")
 
-en_tokenizer_svm = SentenceTransformer("DianaM55/en_sbert_model")
+
+
+#svm
+en_tokenizer_svm = SentenceTransformer("all-MiniLM-L6-v2")
 if not os.path.exists("models/EN/svm/en_svm_model.pkl"):
     download_file("https://huggingface.co/DianaM55/en_svm_model/resolve/main/en_svm_model.pkl", "models/EN/svm/en_svm_model.pkl")
 en_model_svm = joblib.load("models/EN/svm/en_svm_model.pkl")
@@ -67,7 +127,7 @@ if not os.path.exists("models/HU/svm/hu_svm_model.pkl"):
 hu_model_svm = joblib.load("models/HU/svm/hu_svm_model.pkl")
 
 #RF
-en_tokenizer_rf = SentenceTransformer("DianaM55/en_rf_sbert_model")
+en_tokenizer_rf = SentenceTransformer("all-MiniLM-L6-v2")
 
 for fname, url in [
     ("models/EN/rf/en_rf_model.pkl", "https://huggingface.co/DianaM55/en_rf_model/resolve/main/en_rf_model.pkl"),
@@ -122,6 +182,7 @@ with open('models/HU/lstm/hu_lstm_tokenizer.pkl', 'rb') as f:
 hu_model_lstm = load_model('models/HU/lstm/hu_lstm_model.h5')
 
 
+
 @app.route('/')
 def serve_index():
     return render_template('index.html')
@@ -153,7 +214,7 @@ def predict_text(text: str, tokenizer: Any, model: Any) -> Dict[str, Any]:
         }, 200
     except Exception as e:
         return {'error': str(e)}, 500
-    
+
 
 @app.route('/predict/en', methods=['POST'])
 def predict_en() -> tuple[Dict[str, Any], int]:
@@ -465,6 +526,11 @@ def sentiment_hu():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+    
+
+if __name__ == '__main__':
+    app.run(debug=False, host='0.0.0.0', port=8080)
 
     
 
